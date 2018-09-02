@@ -72,7 +72,7 @@
 </div>
 ```
 
-![实现的效果](D:\project_github\blog\blog\assets\flex.PNG)
+![实现的效果](./assets\flex.PNG)
 
 ### Question：
 
