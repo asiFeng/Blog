@@ -1,3 +1,11 @@
+### Book
+
+《JavaScript入门经典》清华出版社
+
+
+
+
+
 ### 跨域问题
 
 跨域问题的出现是因为“同源策略”，出于安全考虑，javascript只能操作相同协议、端口以及域名中的资源或请求。
@@ -49,7 +57,69 @@ var request = new XMLHttpRequest();  // 源自 HTTP API
   window.onMessage = function( messageEvent ){...}
   ```
 
+### 集合
+
+- Array
+- Object
+- Map
+- Set
+
+
+
+### 对象
+
+创建
+
+- 工厂模式：函数体内部常见obj并返回
+
+- 构造函数模式：每个实例生成方法
+
+- 原型模式
+
+- 组合构造函数模式与原型模式
+
+- 动态原型模式
+
+  ```javascript
+  function Cat(name){
+      this.name = name;
+      if( typeof Cat.sayName != "function"){
+          Cat.prototype.sayName = function(){
+              alert(this.name);
+          }
+      }
+  }
+  ```
+
+  
+
 ### 继承
+
+- 原型链继承
+- 寄生组合继承：优点：改变子类原型不会改变父类原型；父类实例属性与方法初始化一遍。
+
+```javascript
+function Animal(){
+	this.name = "animal";
+}
+Animal.prototype.say = function(){
+	alert("say something");
+};
+
+function Cat(){
+	Animal.call(this);
+
+	(function(){
+		vat Temp = function(){};
+		Temp.prototype = Animal.prototype;
+		Cat.prototype = new Temp();
+	})();
+}
+
+var cat = new Cat();
+```
+
+
 
 实例继承
 
@@ -58,3 +128,29 @@ var request = new XMLHttpRequest();  // 源自 HTTP API
 ### 原型链
 
 描述
+
+
+
+### 问题
+
+- 描述：setTimeout 返回闭包，this指向全局window
+
+```javascript
+window.onload = function(){
+
+	name = "阿肆";
+	var cat = new Cat("Kitty");
+	cat.sayName();
+	setTimeout((new Cat("Kitty")).sayName, 2000); // 返回闭包，显示“阿肆”
+}
+
+function Cat(name){
+    this.name = name;
+    if( typeof Cat.sayName != "function"){  // 动态原型模式
+        Cat.prototype.sayName = function(){
+            alert(this.name);
+        }
+    }
+}
+```
+
