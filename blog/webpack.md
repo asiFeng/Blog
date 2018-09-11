@@ -77,7 +77,7 @@ document.querySelector('#root').appendChild(greeter());
 webpack app/main.js -o public/bundle.js
 ```
 
-![执行webpack脚本](./assets/webpack打包.png)
+![webpack打包](./assets/webpack打包.PNG)
 
 
 
