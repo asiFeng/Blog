@@ -2,9 +2,21 @@
 
 《JavaScript入门经典》清华出版社
 
+### Classs使用
 
 
 
+### Date
+
+```javascript
+new Date()/toLocalString(); // 2018/9/13 下午10:07:11
+```
+
+### 定时器
+
+> setInterval()
+>
+> setTimeOut()
 
 ### 跨域问题
 

@@ -1,5 +1,7 @@
 # webpack
 
+[入门介绍](https://www.jianshu.com/p/42e11515c10f)
+
 ### 是什么？
 
 模块打包机，分析项目结构并找到JavaScript模块以及其它一些浏览器不支持的拓展语言（Scss，TypeScript等），并将其转换和打包为合适的格式供浏览器使用。
@@ -34,7 +36,7 @@ npm install --save-dev webpack
 ```bash
 // 创建package.json 
 npm init
-在目录中创建 app/       pbblic/   目录
+在目录中创建 app/       public/   目录
 ```
 
 ```html
@@ -116,6 +118,24 @@ module.exports = {
 "scripts":{
     "start": "webpack",
 }
+```
+
+### Webpack的强大功能
+
+- 让你的浏览器监听代码修改： 项目中安装webpack-dev-server，并配置
+
+### Basel
+
+js编译器，可以通过编译让你的浏览器认识ES6,ES7，以及react jsx。
+
+是几个模块化的包
+
+- 核心： babel-core
+- 处理ES6： babel-env-present
+- 解析JSX： babel-present-react
+
+```shell
+npm install --save-dev babel-core babel-env-present babel-present-react
 ```
 
 
