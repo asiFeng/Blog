@@ -1,10 +1,6 @@
-## 走了很远，还是会开始
+[TOC]
 
-### 害怕，跟怀疑同行
 
-#### 除此，别无它物
-
-##### 希望有人一起
 
 ------
 
@@ -12,7 +8,23 @@
 
 [React中文教程](https://react.docschina.org/docs/hello-world.html)
 
+### 库
+
+> react.js 是React的核心库
+>
+> react-dom.js 提供了与DOM相关的功能
+>
+> Browser.js 提供JSX的转码功能
+>
+> ```shell
+> babel src --out-dir build; // 将 src下js文件转码，输出到build文件夹下
+> ```
+
+> 通过 <script>加载React，将作用于全局。 
+
 ### Hello world
+
+> ReactDom.render() 将模板转为HTML语言，并插入指定的DOM节点。原先节点中有内容会被覆盖！
 
 ```jsx
 ReactDom.render(
@@ -31,7 +43,14 @@ ReactDom.render(
 
 > jsx是javascript的扩展语言，在React中推荐使用，看起来比较像模板语言。
 >
-> 使用小驼峰命名，className...
+> 参数使用小驼峰命名，className...
+>
+> 解析规则：
+>
+> - 遇到 “<” ，用HTML解析
+>   - 大写开头：组件
+>   - 小写开头：内置元素
+> - 遇到 “ { ”，用 javaScript解析
 
 ```jsx
 const user = {
@@ -45,16 +64,18 @@ const userElement = (
 );
 ```
 
-> Basel编译器会把 JSX 编译成 React.createElement(...) 的方法调用。
+> Basel编译器会把 JSX 编译成 
+>
+> React.createElement( component , props ,  ...children ) 的方法调用。
 
 ```jsx
-// 方法一
+// JSX
 const element = (
     <div className="react-item">react对象</div>
 );
 
-// 方法二  等同于
-Render.createElement(
+// Babel编译结果
+React.createElement(
     'div',
     {className: 'react-item'},
     'react 对象'
@@ -87,10 +108,33 @@ const element = {
 >
 > **组件名字必须大写！且有结束标识 \< Welcome  /\>**
 >
-> **组件的返回值中智能有一个根组件，所以必须用div标签包裹所有子元素**
+> **组件的返回值中只能有一个根组件，所以必须用div标签包裹多个子元素**
 
 - 组件输入：props
+
+  - 可以直接赋值：字符串
+
+  - 写了属性不赋值：默认为 “true”，不建议！与JS对象简写混淆：{foo:foo}，{foo}
+
+  - 扩展属性
+
+    ```jsx
+    const props = {firstName:"ben" lastName:"Hector"};
+    function App1(){  return <Greeting firstName="ben" lastName="Hector" />;  }
+    function App2(){  return <Greeting {...props} />;  }
+    ```
+
+  - props.children;  组件标签内的元素
+
 - 组件输出：React元素
+
+  - return 可以是一个组件
+
+  - 可以是一个数组，但别忘记 key 值
+
+    ​	[	<li key="0">0\<li\>
+
+    ​		<li key="1">1\<li\> 	]	
 
 ```jsx
 // 函数定义组件
@@ -132,6 +176,40 @@ function SaySomething(props){
 }
 ```
 
+```jsx
+<Component params="传入的数据" />   // 字符串常量
+<Component params={"传入的数据"} /> // 等价
+```
+
+### React.PropTypes 数据类型检查
+
+> 自React v15.5起已经弃用，请用prop-types库代替。
+>
+> 出于性能原因，propTypes只在开发模式下进行检查。
+>
+> ```jsx
+> import PropTypes from 'prop-types';
+> class Greeting extends React.Component{
+>     constructor(){ super(props); }
+>     render(){
+>         return (<h1>{this.props.name}</h1>);
+>     }
+> }
+> Greeting.propTypes = {
+>     name: PropTypes.string
+> };  
+> ```
+
+### 静态类型检查
+
+> TypeScript 
+>
+> Flow
+
+### Refs & DOM
+
+
+
 ### State & 生命周期
 
 > 现阶段学习中，我们通过 ReactDOM.render( ) 来更新UI。
@@ -170,9 +248,168 @@ class Clock extends React.Component{
 ReactDOM.render(<Clock />, document.querySelector("#timer"));
 ```
 
-> **知识点**
+> **知识点** state
+>
+> - 构造函数是唯一能初始化 state 的地方
+> - state 中通过 setState 设置的属性能进行浅合并，单独设置不会导致另一项失效。
+> - prevState中包含未改变时的state
+
+```jsx
+constructor(){
+    super(props);
+    this.state = {
+        posts:[],
+        comments: [],
+        isToggle: true,
+    };
+}
+// 浅合并
+getData(){
+    this.setState({ posts: [1,2,3]});
+    this.setState({comments: [99,99]});
+}
+
+changeToggle(){ // 用于状态翻转的函数
+    this.setState((prevState)=>({
+        isToggle: !prevState.isToggle
+    }));
+}
+```
+
+> **知识点** 生命周期
+>
+> - componentWillMount
+> - componentDidMount
+> - componentWillUnmount
+
+### 事件处理
+
+> React事件绑定属性的命名是使用驼峰式，而不是小写。
+>
+> JSX的语法需要传入一个函数作为事件处理函数，而不是函数字符串。
+>
+> JSX事件绑定的回调函数不会默认绑定this到当前对象：需要在组件的定义中处理好（构造函数bind，或者箭头函数）
+
+```jsx
+constructor(){
+    this.show1 = this.show1.bind(this);
+    
+    // 或者
+    this.show1 = ()=>{  // 箭头函数的 this 指向定义时所在环境
+        alert(this.name); 
+    }
+}
+
+// 或者：属性初始化器语法，实验阶段
+this.show1 = ()=>{  // 箭头函数的 this 指向定义时所在环境
+    alert(this.name); 
+}
+<button onClick={show1}>点击</button>
+
+// 或者：回调函数使用箭头函数
+    <button onClick={(e)=>this.show1(e)}>点击</button>
+```
+
+> 
+
+### 条件渲染
+
+> 通过条件判断返回不同React元素
+
+```jsx
+function UserGreeting(){
+  return <h1 className="user">尊敬的用户，你好！</h1>;
+}
+
+function StrangerGreeting(){
+  return <h1 className="strange">游客模式</h1>;
+}
+
+
+class Greeting extends React.Component{
+  constructor(props){
+    super(props);
+    this.isLogin = props.isLogin;
+    console.log(this.isLogin);
+  }
+render(){
+  if(this.isLogin){
+    return <UserGreeting />;
+  }else{
+      return <StrangerGreeting />;    
+      }
+    } 
+}
+ReactDOM.render(
+<Greeting  isLogin={true} />,    // 通过更改登录模式true/false渲染组件
+document.getElementById("timer")
+)
+```
+
+> 变量元素，通过设置变量，不同条件变量值不同
+>
+> - return ({变量Name});
+
+> && 控制显示元素
+>
+> - true && element  // 返回 element
+> - false && element  // React会忽略
+
+```jsx
+return (<div>
+        <h1>Mail Box</h1>
+        {message.length>0 && <p>你还有{message.length}条未读短信</p>}
+    </div>);
+```
+
+> 三目木运算
+>
+> - The user is <b>{isLoggedIn ? 'currently' : 'not'}</b> logged in. 
+
+> 阻止组件渲染
+>
+> - return null；
+> - 组件的 `render` 方法返回 `null` 并不会影响该组件生命周期方法的回调。例如，`componentWillUpdate` 和 `componentDidUpdate` 依然可以被调用。 
+>
+> 数组存在的问题：当数组为空[]时，以下显示“0”
+>
+> ```jsx
+> // 错误
+> <div>{props.message.length && <MsgNum />}</div>
+> // 正确
+> <div>{props.message.length>0 && <MsgNum />}</div>
+> ```
 >
 > 
+
+### 列表 & keys
+
+> 需要记住一件事：{ } 中可以嵌套任何表达式，但是注意代码可读性。
+
+```jsx
+function SideBar(props){
+    const elements = props.lists.map( 
+        el=><li key={index}>{el}</li> 
+    );
+    return (
+        <ul>{ elements }</ul>
+    );
+}   // 也可以把 map 放在return中的大括号中映射。
+```
+
+> keys ？？？？？？
+
+### 表单
+
+> 受控组件 
+
+> 非受控组件
+
+ ### 状态提升
+
+### 组合 VS 继承
+
+
 
 # Question
 
@@ -211,7 +448,36 @@ React中的核心概念
 
 ？？？使用类就允许我们使用其它特性，例如局部状态、生命周期钩子 ？？？
 
+- 单项数据流
+
+### 事件对象 e
+
+？？？
+
+### 6
+
+### 7时需要从组件获取真实 DOM 的节点，这时就要用到 `ref` 属性 
+
+
+
+### 完美世界要求
+
+- H5
+- React\组件化开发\前端工程化
+- 熟悉React.js基本原理：（虚拟DOM、DOM DIFF、组件生命周期的管理）
+- JSX、Babel语及其基本原理者优先
+
+
+
+
+
 [别人blog01](https://segmentfault.com/a/1190000012921279)
+
+[React 技术栈系列教程](http://www.ruanyifeng.com/blog/2016/09/react-technology-stack.html)
+
+[React's diff algorithm](https://calendar.perfplanet.com/2013/diff/) 推荐\*\*\*\*\*
+
+
 
 
 

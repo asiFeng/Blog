@@ -2,7 +2,128 @@
 
 《JavaScript入门经典》清华出版社
 
-### Classs使用
+### 导入模块
+
+```javascript
+import React from 'react';
+```
+
+
+
+### Classs用法 - ES6
+
+> **class 知识点**
+
+- 类和模块默认就是严格模式，不需指定 “use strict”，ES6把整个语言升级到了严格模式；
+- 类不存在变量提升，所以类定义要写在调用，继承之前！
+
+- class中的 this 代表实例对象
+- ES5 中的构造方法对应于 ES6 中的构造方法
+- 类中熟悉感以及方法除非使用 this 绑定到实例，否则都是定义在 prototype 上面。
+
+```javascript
+let methodName = "getName";
+class Animal{
+    // 构造方法
+    constructor(name){
+        this.name = name;
+    }
+    // 方法
+    eat(){
+        console.log(this.name+" is eating something.");
+    }
+    // 通过表达式获得类的方法名：getName
+    [methodName](){
+        return this.name;
+    }
+}
+```
+
+>  constructor方法
+
+- constructor（）通过 new 命令生成实例时自动调用该方法。
+- 默认返回实例对象，即 this 。
+- class 定义的类必须通过 new 调用，否则报错；
+
+> class中方法
+
+- 不用加“ function ”关键字，方法之间不用逗号隔开
+- 所有的方法都是定义在原型对象上面的！ " Animal.prototype.eat "
+- 通过 **Object.assign()** 方法可以一次向类添加多个方法
+  - 延伸：Object.assign可以用来实现对象拷贝，返回目标对象。
+
+```javascript
+class Point{
+    constructor(){ //...}
+}
+
+Object.assgin( Point.prototype,{
+	toString(){},
+     toValue(){}
+})
+```
+
+> class 表达式
+
+- 类名为 MyClass，Me 只在 类的定义中使用，不需要可以省略；
+
+```javascript
+const MyClass = class Me{
+    getClassName(){
+        return Me.name;
+    }
+}
+```
+
+> 私有属性 #x
+
+
+
+> **this 指向**
+>
+> ```javascript
+> class Animal{
+>     constructor(name){
+>         this.name = name;
+>     }
+>     eat(){
+>         console.log(this.name+" is eating something.");
+>     }
+> }
+> let cat = new Animal('coco');
+> let {eat} = cat;
+> eat();  // 报错，全局调用eat（），this指向window，不存在 name 属性；
+> ```
+>
+> **解决**
+>
+> - 构造函数中绑定到this
+>
+>   ```javascript
+>   constructor(name){
+>       this.name = name;
+>       this.eat = this.eat.bind(this);
+>   }
+>   ```
+>
+> - 构造函数中定义：箭头函数
+>
+>   解释：箭头函数的 this 绑定到定义所在的环境
+>
+>   ```javascript
+>   constructor(name){
+>       this.name = name;
+>       this.eat = (name=" there")=>{
+>           console.log(this.name+" is eating something.");
+>       }
+>   }
+>   ```
+>
+> - proxy
+>
+>   ```javascript
+>   
+>   ```
 
 
 
